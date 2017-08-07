@@ -1,0 +1,39 @@
+version: '3.1'
+
+services:
+  consul:
+    image: consul:latest
+    ports:
+    - "8300:8300"
+    - "8400:8400"
+    - "8500:8500"
+    - "8600:53/udp"
+    container_name: consul
+  haproxy:
+    # image: haproxy:1.5
+    # command: tail -f /dev/null
+    # command: ['/usr/bin/consul-template','-template', './advanced.cfg.template:./advanced.cfg:./haproxy-restart.sh']
+    build:
+      context: haproxy-consul-template/.
+    # volumes:
+    #   - data:/usr/local/etc/haproxy
+    container_name: haproxy
+
+  svc1:
+    build:
+      context: .
+      args:
+        - NODE_ENV=development
+    # you can use legacy debug config or new inspect
+    #command: ../node_modules/.bin/nodemon --debug=0.0.0.0:5858
+    command: ../node_modules/.bin/nodemon service-data.js 3000 --inspect=0.0.0.0:9229
+    ports:
+      - "1337:3000"
+      - "5858:5858"
+      - "9229:9229"
+    volumes:
+      - .:/opt/app
+    environment:
+      - NODE_ENV=development
+      - HOST=consul
+
