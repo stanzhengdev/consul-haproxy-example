@@ -1,9 +1,7 @@
 #!/usr/bin/env node
 
 const express = require('express');
-const consul = require('consul')({
-  host: 'consul'
-});
+const consul = require('consul')({host: process.env.CONSUL_HOST || 'localhost'});
 const os = require('os');
 const uuid = require('uuid');
 const app = express();
