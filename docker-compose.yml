@@ -12,12 +12,17 @@ services:
   haproxy:
     # image: haproxy:1.5
     # command: tail -f /dev/null
-    # command: ['/usr/bin/consul-template','-template', './advanced.cfg.template:./advanced.cfg:./haproxy-restart.sh']
+    # command: ['run.sh']
+    # command: ['/usr/bin/consul-template -template ./advanced.cfg.template:./advanced.cfg:./haproxy-restart.sh']
     build:
       context: haproxy-consul-template/.
     # volumes:
     #   - data:/usr/local/etc/haproxy
     container_name: haproxy
+    environment:
+      - CONSUL_ADDR=consul:8500
+    ports:
+      - 4000:8000
 
   svc1:
     build:
@@ -35,5 +40,5 @@ services:
       - .:/opt/app
     environment:
       - NODE_ENV=development
-      - HOST=consul
+      - CONSUL_HOST=consul
 

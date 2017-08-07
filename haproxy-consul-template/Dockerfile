@@ -1,18 +1,22 @@
 FROM haproxy
 
 
-COPY . /opt/app
+ADD . /opt/app
 RUN mkdir -p /opt/app
 
-
 WORKDIR /opt/app
-COPY . /opt/app
+ADD . /opt/app
 
 
-CMD ["./install_consul-template.sh"]
+
+RUN ./install_consul-template.sh
 CMD ["bash", "/haproxy-start"]
+
 # Expose ports.
 EXPOSE 80
 EXPOSE 443
 
-CMD ['./run.sh']
+ADD run.sh /usr/local/bin/run.sh
+RUN chmod +x /usr/local/bin/run.sh
+CMD ["haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
+CMD ["/usr/local/bin/run.sh"]
