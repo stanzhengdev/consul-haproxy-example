@@ -13,5 +13,15 @@ frontend http-in
   stats enable
   stats uri /admin?stats
 
-backend www{{range service "www"}}
-  server {{.ID}} {{.Address}}:{{.Port}} maxconn 32{{end}}
+# Iterate Over Services
+{{range services }}
+  # {{.Name}} {{.Tags}}
+  acl is_{{.Name}} path_beg -i /{{.Name}}
+  use_backend {{.Name}} if is_{{.Name}} {{end}}
+
+# Route Services
+{{range services}}
+  # {{.Name}} {{.Tags}}
+  backend {{.Name}} {{range service "www" }}
+    server {{.ID}} {{.Address}}:{{.Port}} maxconn 32{{end}} {{end}}
+
