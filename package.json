@@ -25,7 +25,7 @@
   "dependencies": {
     "consul": "^0.27.0",
     "express": "^4.14.0",
-    "request": "^2.79.0",
+    "request": "^2.81.0",
     "uuid": "^3.0.0"
   },
   "devDependencies": {
